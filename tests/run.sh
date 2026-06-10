@@ -338,6 +338,13 @@ assert_eq "uninstall: zshrc restored" "$orig" "$(<"$IZ")"
 TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/uninstall.sh" >/dev/null
 assert_eq "uninstall: safe to run twice" "0" "$?"
 
+# a user-written start marker with no end marker must never trigger the
+# block delete (an unterminated sed range would wipe to end of file)
+print "# >>> terminal-tutor >>>" > "$IZ"
+print "export KEEP=me" >> "$IZ"
+TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/uninstall.sh" >/dev/null
+grep -qF "export KEEP=me" "$IZ"; assert_eq "uninstall: unterminated marker safe" "0" "$?"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"

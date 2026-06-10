@@ -31,8 +31,9 @@ touch "$STATE_DIR/seen"
 [[ -f "$STATE_DIR/state" ]] || echo on > "$STATE_DIR/state"
 
 if ! grep -qF "$MARK_START" "$ZSHRC" 2>/dev/null; then
+  # blank separator line, but only if the file exists and is non-empty
+  [[ -s "$ZSHRC" ]] && printf '\n' >> "$ZSHRC"
   {
-    echo ""
     echo "$MARK_START"
     echo "source \"\$HOME/.terminal-tutor/app/terminal-tutor.zsh\""
     echo "$MARK_END"
