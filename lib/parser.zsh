@@ -32,3 +32,30 @@ tt_split() {
   (( ${#cur} )) && TT_SEGMENTS+=("${(pj:\x1f:)cur}")
   return 0
 }
+
+# tt_tokenize <segment (words joined by \x1f)>
+# Sets TT_TOKENS - array of "type:value" with type: cmd | flag | word | arg
+tt_tokenize() {
+  emulate -L zsh
+  local -a words
+  words=("${(ps:\x1f:)1}")
+  TT_TOKENS=()
+  local w i expecting_cmd=1
+  for w in "${words[@]}"; do
+    if (( expecting_cmd )) && [[ "$w" != -* ]]; then
+      TT_TOKENS+=("cmd:$w")
+      [[ "$w" == sudo || "$w" == env ]] || expecting_cmd=0
+      continue
+    fi
+    case "$w" in
+      --) TT_TOKENS+=("arg:--") ;;
+      --*) TT_TOKENS+=("flag:${w%%=*}") ;;
+      -[A-Za-z0-9]) TT_TOKENS+=("flag:$w") ;;
+      -[A-Za-z][A-Za-z]*)
+        for (( i=2; i <= ${#w}; i++ )); do TT_TOKENS+=("flag:-${w[i]}"); done ;;
+      -*) TT_TOKENS+=("flag:$w") ;;
+      *) TT_TOKENS+=("word:$w") ;;
+    esac
+  done
+  return 0
+}
