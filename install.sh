@@ -4,7 +4,7 @@
 #   Developer mode:    ./install.sh --local   (symlinks this folder instead of cloning)
 set -euo pipefail
 
-REPO_URL="https://github.com/arush-qala/terminal-tutor.git"   # arush-qala is set in the GitHub task
+REPO_URL="https://github.com/arush-qala/terminal-tutor.git"
 TT_HOME="${TUTOR_HOME:-$HOME}"
 ZSHRC="${TUTOR_ZSHRC:-$TT_HOME/.zshrc}"
 STATE_DIR="$TT_HOME/.terminal-tutor"
