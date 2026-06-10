@@ -70,6 +70,8 @@ tt_explain_segment() {
     case "$type" in
       cmd)
         cmd="$val"; sub_checked=0
+        # path-like commands (./x, /bin/x, ../x) have no dictionary entries; skip
+        [[ "$cmd" == */* ]] && { cmd=""; continue }
         if [[ ! -r "$TT_DICT_DIR/$cmd" ]]; then
           if [[ "$mode" == all ]]; then
             tt_line 0 "$cmd" "not in my dictionary (try: man $cmd, or ask Claude)"
@@ -84,6 +86,7 @@ tt_explain_segment() {
           if text="$(tt_dict_get "$cmd" summary)"; then
             tt_line 0 "$cmd" "$text"
           fi
+          # mark even if the file had no summary line, so it isn't re-checked every run
           [[ "$mode" == new ]] && tt_mark "$cmd"
         fi
         ;;
@@ -102,12 +105,12 @@ tt_explain_segment() {
         [[ -z "$cmd" ]] && continue
         if (( ! sub_checked )); then
           sub_checked=1
-          if text="$(tt_dict_get "$cmd" sub "$val")"; then
-            if [[ "$mode" == all ]] || ! tt_seen "$cmd $val"; then
+          if [[ "$mode" == all ]] || ! tt_seen "$cmd $val"; then
+            if text="$(tt_dict_get "$cmd" sub "$val")"; then
               tt_line 1 "$val" "$text"
               [[ "$mode" == new ]] && tt_mark "$cmd $val"
+              continue
             fi
-            continue
           fi
         fi
         if [[ "$val" == http://* || "$val" == https://* ]]; then

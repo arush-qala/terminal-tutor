@@ -175,6 +175,14 @@ assert_eq "seg-all: url arg" \
 "[t] foo - a test command for the suite
 [t]   https://github.com/foo/bar - an internet address" "$(out_join)"
 
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "./script.sh${SEP}-x" all
+assert_eq "seg-all: path-like cmd skipped" "0" "${#TT_OUT}"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "../foo" all
+assert_eq "seg-all: traversal skipped" "0" "${#TT_OUT}"
+
 # --- tt_explain_segment (new mode) ---
 flush_seen() { (( ${#TT_NEWLY_SEEN} )) && print -rl -- "${TT_NEWLY_SEEN[@]}" >> "$TT_SEEN_FILE"; TT_NEWLY_SEEN=() }
 : > "$TT_SEEN_FILE"
@@ -207,6 +215,13 @@ TT_OUT=() TT_NEWLY_SEEN=()
 tt_explain_segment "foo${SEP}-a" new
 tt_explain_segment "foo${SEP}-a" new
 assert_eq "seg-new: same line dedupe" "2" "${#TT_OUT}"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}run" new
+flush_seen
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}run" new
+assert_eq "seg-new: seen sub silent" "0" "${#TT_OUT}"
 
 # === SUMMARY ===
 print ""
