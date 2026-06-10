@@ -1,10 +1,10 @@
 #!/bin/bash
 # terminal-tutor installer.
-#   One-line install:  curl -fsSL https://raw.githubusercontent.com/REPO_OWNER/terminal-tutor/main/install.sh | bash
+#   One-line install:  curl -fsSL https://raw.githubusercontent.com/arush-qala/terminal-tutor/main/install.sh | bash
 #   Developer mode:    ./install.sh --local   (symlinks this folder instead of cloning)
 set -euo pipefail
 
-REPO_URL="https://github.com/REPO_OWNER/terminal-tutor.git"   # REPO_OWNER is set in the GitHub task
+REPO_URL="https://github.com/arush-qala/terminal-tutor.git"   # arush-qala is set in the GitHub task
 TT_HOME="${TUTOR_HOME:-$HOME}"
 ZSHRC="${TUTOR_ZSHRC:-$TT_HOME/.zshrc}"
 STATE_DIR="$TT_HOME/.terminal-tutor"

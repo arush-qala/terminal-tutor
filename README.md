@@ -21,7 +21,7 @@ The explanations are in plain English. No jargon, no fluff.
 Run this in your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/REPO_OWNER/terminal-tutor/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/arush-qala/terminal-tutor/main/install.sh | bash
 ```
 
 Then open a new Terminal window. That's it.
