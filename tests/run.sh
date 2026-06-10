@@ -223,6 +223,47 @@ TT_OUT=() TT_NEWLY_SEEN=()
 tt_explain_segment "foo${SEP}run" new
 assert_eq "seg-new: seen sub silent" "0" "${#TT_OUT}"
 
+# --- plugin wiring (hook, explain, tutor) ---
+# Load the full plugin in a sandboxed HOME, with the REAL dictionary.
+export TUTOR_HOME="$TMP/fakehome"
+mkdir -p "$TUTOR_HOME"
+source "$ROOT/terminal-tutor.zsh"
+# Re-apply plain test style (plugin reset the style globals)
+TT_PREFIX="[t]" TT_SEP="-" TT_C_PREFIX="" TT_C_TERM="" TT_C_TEXT="" TT_C_RESET=""
+
+out="$(tt_preexec 'ls -l')"
+assert_eq "hook: teaches on first use" "0" "$?"
+[[ "$out" == *"[t] ls -"* ]] && hookline=ok || hookline="missing: $out"
+assert_eq "hook: ls summary printed" "ok" "$hookline"
+
+out="$(tt_preexec 'ls -l')"
+assert_eq "hook: silent on second use" "" "$out"
+
+print off > "$TT_STATE_FILE"
+out="$(tt_preexec 'pwd')"
+assert_eq "hook: respects tutor off" "" "$out"
+print on > "$TT_STATE_FILE"
+
+out="$(explain ls -l)"
+[[ "$out" == *"[t] ls -"*$'\n'*"[t]   -l -"* ]] && exok=ok || exok="bad: $out"
+assert_eq "explain: full breakdown anytime" "ok" "$exok"
+
+out="$(explain)"
+[[ "$out" == Usage:* ]] && usok=ok || usok="bad: $out"
+assert_eq "explain: usage when no args" "ok" "$usok"
+
+tutor off >/dev/null
+assert_eq "tutor: off written" "off" "$(<"$TT_STATE_FILE")"
+tutor on >/dev/null
+assert_eq "tutor: on written" "on" "$(<"$TT_STATE_FILE")"
+print "ls" >> "$TT_SEEN_FILE"
+tutor reset >/dev/null
+assert_eq "tutor: reset clears seen" "0" "$(grep -c '' "$TT_SEEN_FILE")"
+out="$(tutor status)"
+[[ "$out" == *"on"*"learned"* ]] && stok=ok || stok="bad: $out"
+assert_eq "tutor: status reports" "ok" "$stok"
+unset TUTOR_HOME
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"

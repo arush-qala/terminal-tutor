@@ -1,0 +1,6 @@
+summary list the files and folders in the current folder
+flag -l long view: one file per line with size, owner and date
+flag -a also show hidden files (names starting with a dot)
+flag -h show sizes in human units like KB and MB
+flag -t newest files first
+flag -R also list inside every subfolder
