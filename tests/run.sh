@@ -90,6 +90,24 @@ assert_eq "tok: env assignment" "cmd:env word:FOO=bar cmd:python" "$(tok_join)"
 tt_tokenize "grep${SEP}--${SEP}-v"
 assert_eq "tok: dashes end flags" "cmd:grep arg:-- word:-v" "$(tok_join)"
 
+# --- tt_dict_get ---
+cat > "$TT_DICT_DIR/foo" <<'EOF'
+# fixture command
+summary a test command for the suite
+sub run runs the thing
+flag -a option a
+flag --all every item
+arg url an internet address
+EOF
+
+assert_eq "dict: summary" "a test command for the suite" "$(tt_dict_get foo summary)"
+assert_eq "dict: sub" "runs the thing" "$(tt_dict_get foo sub run)"
+assert_eq "dict: short flag" "option a" "$(tt_dict_get foo flag -a)"
+assert_eq "dict: long flag" "every item" "$(tt_dict_get foo flag --all)"
+assert_eq "dict: arg url" "an internet address" "$(tt_dict_get foo arg url)"
+tt_dict_get foo flag -z; assert_eq "dict: miss returns 1" "1" "$?"
+tt_dict_get nosuchcmd summary; assert_eq "dict: missing file returns 1" "1" "$?"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"
