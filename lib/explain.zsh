@@ -55,3 +55,73 @@ tt_explain_op() {
   [[ "$mode" == new ]] && tt_mark "op:$op"
   return 0
 }
+
+# tt_explain_segment <segment (words joined by \x1f)> <mode: new|all>
+# Appends explanation lines to TT_OUT; in "new" mode appends taught keys
+# to TT_NEWLY_SEEN and skips anything already seen.
+tt_explain_segment() {
+  emulate -L zsh
+  local seg="$1" mode="$2"
+  local -a TT_TOKENS
+  tt_tokenize "$seg"
+  local tok type val cmd="" sub_checked=0 text short
+  for tok in "${TT_TOKENS[@]}"; do
+    type="${tok%%:*}"; val="${tok#*:}"
+    case "$type" in
+      cmd)
+        cmd="$val"; sub_checked=0
+        if [[ ! -r "$TT_DICT_DIR/$cmd" ]]; then
+          if [[ "$mode" == all ]]; then
+            tt_line 0 "$cmd" "not in my dictionary (try: man $cmd, or ask Claude)"
+          elif ! tt_seen "unknown:$cmd"; then
+            tt_line 0 "$cmd" "not in my dictionary yet (try: man $cmd, or ask Claude)"
+            tt_mark "unknown:$cmd"
+          fi
+          cmd=""
+          continue
+        fi
+        if [[ "$mode" == all ]] || ! tt_seen "$cmd"; then
+          if text="$(tt_dict_get "$cmd" summary)"; then
+            tt_line 0 "$cmd" "$text"
+          fi
+          [[ "$mode" == new ]] && tt_mark "$cmd"
+        fi
+        ;;
+      flag)
+        [[ -z "$cmd" ]] && continue
+        if [[ "$mode" == all ]] || ! tt_seen "$cmd $val"; then
+          if text="$(tt_dict_get "$cmd" flag "$val")"; then
+            tt_line 1 "$val" "$text"
+            [[ "$mode" == new ]] && tt_mark "$cmd $val"
+          elif [[ "$mode" == all ]]; then
+            tt_line 1 "$val" "(no entry for this option)"
+          fi
+        fi
+        ;;
+      word)
+        [[ -z "$cmd" ]] && continue
+        if (( ! sub_checked )); then
+          sub_checked=1
+          if text="$(tt_dict_get "$cmd" sub "$val")"; then
+            if [[ "$mode" == all ]] || ! tt_seen "$cmd $val"; then
+              tt_line 1 "$val" "$text"
+              [[ "$mode" == new ]] && tt_mark "$cmd $val"
+            fi
+            continue
+          fi
+        fi
+        if [[ "$val" == http://* || "$val" == https://* ]]; then
+          if text="$(tt_dict_get "$cmd" arg url)"; then
+            if [[ "$mode" == all ]] || ! tt_seen "$cmd arg:url"; then
+              short="$val"
+              (( ${#val} > 42 )) && short="${val[1,40]}…"
+              tt_line 1 "$short" "$text"
+              [[ "$mode" == new ]] && tt_mark "$cmd arg:url"
+            fi
+          fi
+        fi
+        ;;
+    esac
+  done
+  return 0
+}

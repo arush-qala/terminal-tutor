@@ -148,6 +148,33 @@ TT_OUT=()
 tt_explain_op ">" new
 assert_eq "op: unknown op silent" "0" "${#TT_OUT}"
 
+# --- tt_explain_segment (all mode) ---
+out_join() { print -r -- "${(F)TT_OUT}" }
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-a${SEP}run" all
+assert_eq "seg-all: summary+flag+sub" \
+"[t] foo - a test command for the suite
+[t]   -a - option a
+[t]   run - runs the thing" "$(out_join)"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-z" all
+assert_eq "seg-all: unknown flag fallback" \
+"[t] foo - a test command for the suite
+[t]   -z - (no entry for this option)" "$(out_join)"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "nosuchcmd${SEP}-x" all
+assert_eq "seg-all: unknown command" \
+"[t] nosuchcmd - not in my dictionary (try: man nosuchcmd, or ask Claude)" "$(out_join)"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}https://github.com/foo/bar" all
+assert_eq "seg-all: url arg" \
+"[t] foo - a test command for the suite
+[t]   https://github.com/foo/bar - an internet address" "$(out_join)"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"
