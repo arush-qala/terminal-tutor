@@ -15,11 +15,12 @@ mkdir -p "$TT_STATE_DIR" 2>/dev/null
 [[ -f "$TT_SEEN_FILE" ]] || : > "$TT_SEEN_FILE"
 [[ -f "$TT_STATE_FILE" ]] || print on > "$TT_STATE_FILE"
 
-# --- Style (defaults; final values chosen by Arush via tools/style-playground.html) ---
+# --- Style (chosen by Arush via tools/style-playground.html:
+#     prefix=[tutor] scheme=yellow sep=— layout=indented) ---
 typeset -g TT_PREFIX="[tutor]"
 typeset -g TT_SEP="—"
-typeset -g TT_C_PREFIX=$'\e[2;36m'   # dim cyan
-typeset -g TT_C_TERM=$'\e[1;36m'     # bright cyan
+typeset -g TT_C_PREFIX=$'\e[2;33m'   # dim yellow
+typeset -g TT_C_TERM=$'\e[1;33m'     # bright yellow
 typeset -g TT_C_TEXT=$'\e[2m'        # dim
 typeset -g TT_C_RESET=$'\e[0m'
 
