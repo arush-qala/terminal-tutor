@@ -30,7 +30,9 @@ source "$TT_DIR/lib/explain.zsh"
 tt_preexec() {
   setopt localoptions noerrexit
   {
-    [[ -r "$TT_STATE_FILE" && "$(<"$TT_STATE_FILE")" == off ]] && return 0
+    local tt_state=""
+    [[ -r "$TT_STATE_FILE" ]] && read -r tt_state < "$TT_STATE_FILE"
+    [[ "$tt_state" == off ]] && return 0
     local -a TT_OUT TT_NEWLY_SEEN TT_SEGMENTS TT_OPS
     TT_OUT=() TT_NEWLY_SEEN=()
     tt_split "$1"
@@ -50,7 +52,7 @@ explain() {
   emulate -L zsh
   if (( $# == 0 )); then
     print "Usage: explain <command>     e.g.  explain ls -la"
-    print "Tip: put quotes around lines with | or > :  explain 'cat log | grep error'"
+    print "Tip: put quotes around commands with | or > :  explain 'cat log | grep error'"
     return 0
   fi
   local -a TT_OUT TT_NEWLY_SEEN TT_SEGMENTS TT_OPS
@@ -72,17 +74,20 @@ tutor() {
   emulate -L zsh
   case "${1:-}" in
     on)
-      print on > "$TT_STATE_FILE"
+      mkdir -p "$TT_STATE_DIR" 2>/dev/null
+      print on > "$TT_STATE_FILE" 2>/dev/null
       print "terminal-tutor: ON - new commands will be explained." ;;
     off)
-      print off > "$TT_STATE_FILE"
+      mkdir -p "$TT_STATE_DIR" 2>/dev/null
+      print off > "$TT_STATE_FILE" 2>/dev/null
       print "terminal-tutor: OFF - run 'tutor on' to resume." ;;
     reset)
-      : > "$TT_SEEN_FILE"
+      mkdir -p "$TT_STATE_DIR" 2>/dev/null
+      : > "$TT_SEEN_FILE" 2>/dev/null
       print "terminal-tutor: memory cleared - everything will be taught again." ;;
     status)
       local state="on"
-      [[ -r "$TT_STATE_FILE" ]] && state="$(<"$TT_STATE_FILE")"
+      [[ -r "$TT_STATE_FILE" ]] && read -r state < "$TT_STATE_FILE"; [[ -n "$state" ]] || state=on
       local learned=0
       [[ -r "$TT_SEEN_FILE" ]] && learned="$(grep -c '' "$TT_SEEN_FILE")"
       local -a dfiles

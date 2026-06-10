@@ -262,6 +262,24 @@ assert_eq "tutor: reset clears seen" "0" "$(grep -c '' "$TT_SEEN_FILE")"
 out="$(tutor status)"
 [[ "$out" == *"on"*"learned"* ]] && stok=ok || stok="bad: $out"
 assert_eq "tutor: status reports" "ok" "$stok"
+
+# Fix 1: tutor on/off/reset survive a missing state dir
+rm -rf "$TT_STATE_DIR"
+out="$(tutor off 2>&1)"
+assert_eq "tutor: off survives missing dir" "off" "$(<"$TT_STATE_FILE")"
+[[ "$out" == *OFF* && "$out" != *"no such file"* ]] && offok=ok || offok="bad: $out"
+assert_eq "tutor: off message clean" "ok" "$offok"
+tutor on >/dev/null 2>&1
+
+# Fix 2: state checks read only the first line of the state file
+printf 'off\njunk line\n' > "$TT_STATE_FILE"
+out="$(tt_preexec 'pwd')"
+assert_eq "hook: off honored with trailing junk" "" "$out"
+out="$(tutor status)"
+[[ "$out" == "terminal-tutor: off | "* ]] && stok2=ok || stok2="bad: $out"
+assert_eq "tutor: status first line only" "ok" "$stok2"
+print on > "$TT_STATE_FILE"
+
 unset TUTOR_HOME
 
 # === SUMMARY ===
