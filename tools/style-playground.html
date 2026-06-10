@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>terminal-tutor — Style Playground</title>
+<style>
+  :root {
+    --bg: #14151a;
+    --panel: #1d1f26;
+    --panel2: #23252e;
+    --border: #2e313c;
+    --text: #e7e9ee;
+    --muted: #9aa0ad;
+    --accent: #5cc8ff;
+    --term-bg: #0d0e12;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 18px 28px 10px;
+  }
+  header h1 { font-size: 19px; font-weight: 650; }
+  header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .layout {
+    display: flex;
+    gap: 20px;
+    padding: 14px 28px 28px;
+    flex: 1;
+    align-items: flex-start;
+  }
+  /* ---------- Controls ---------- */
+  .controls {
+    width: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .group {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .group h2 {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .optrow { display: flex; flex-wrap: wrap; gap: 7px; }
+  .opt {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color .12s, background .12s;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .opt:hover { border-color: #4a4e5c; }
+  .opt.sel {
+    border-color: var(--accent);
+    background: rgba(92, 200, 255, 0.12);
+  }
+  .presets .opt { font-family: inherit; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 9px; line-height: 1.45; }
+  /* ---------- Preview ---------- */
+  .main { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .termwin {
+    background: var(--term-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 40px rgba(0,0,0,.45);
+  }
+  .termbar {
+    background: #1a1c22;
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .termtitle { color: #6b7080; font-size: 12px; margin-left: 10px; font-family: "SF Mono", Menlo, monospace; }
+  .termbody {
+    padding: 18px 20px 22px;
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .promptline .ps { color: #7ee787; }
+  .promptline .cmd { color: #e7e9ee; }
+  .outline { color: #9aa0ad; }
+  /* tutor line pieces get inline colors from JS */
+  /* ---------- Output ---------- */
+  .out {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .out h2 {
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 9px;
+  }
+  .outline-box {
+    display: flex; gap: 10px; align-items: center;
+  }
+  #settings {
+    flex: 1;
+    background: var(--term-bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 13px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    color: var(--accent);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  #copy {
+    background: var(--accent);
+    color: #08222e;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #copy:hover { filter: brightness(1.1); }
+  .out p.note { color: var(--muted); font-size: 12px; margin-top: 9px; line-height: 1.5; }
+  @media (max-width: 860px) {
+    .layout { flex-direction: column; }
+    .controls { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>terminal-tutor — pick your style</h1>
+  <p>This is exactly how the teaching lines will look in your Terminal. Click around, then copy your choices and paste them back to Claude.</p>
+</header>
+
+<div class="layout">
+  <div class="controls">
+    <div class="group presets">
+      <h2>Presets</h2>
+      <div class="optrow" id="presets"></div>
+      <div class="hint">Quick starting points — you can still tweak everything below.</div>
+    </div>
+    <div class="group">
+      <h2>Prefix (starts every tutor line)</h2>
+      <div class="optrow" id="prefix"></div>
+    </div>
+    <div class="group">
+      <h2>Color scheme</h2>
+      <div class="optrow" id="scheme"></div>
+      <div class="hint">The command/flag is shown bright, the explanation dim, so the lines never shout over your real output.</div>
+    </div>
+    <div class="group">
+      <h2>Separator</h2>
+      <div class="optrow" id="sep"></div>
+    </div>
+    <div class="group">
+      <h2>Layout</h2>
+      <div class="optrow" id="layout"></div>
+      <div class="hint">Indented: flags sit under their command. Flat: everything starts at the left edge.</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="termwin">
+      <div class="termbar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="termtitle">arush — zsh — Terminal</span>
+      </div>
+      <div class="termbody" id="term"></div>
+    </div>
+
+    <div class="out">
+      <h2>Your choices</h2>
+      <div class="outline-box">
+        <div id="settings"></div>
+        <button id="copy">Copy my choices</button>
+      </div>
+      <p class="note">When you're happy, click <b>Copy my choices</b> and paste the line back into the Claude chat. Claude will make it the plugin's default look.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const OPTIONS = {
+  prefix: ["[tutor]", "📚", "›", "tip:", "none"],
+  scheme: ["dim gray", "cyan", "yellow", "green"],
+  sep: ["—", "-", "→", ":"],
+  layout: ["indented", "flat"],
+};
+
+const SCHEMES = {
+  "dim gray": { prefix: "#6b7080", term: "#c8cdd8", text: "#80869404" },
+  "cyan":     { prefix: "#3a8fa8", term: "#56d4f5", text: "" },
+  "yellow":   { prefix: "#9a8430", term: "#e8c545", text: "" },
+  "green":    { prefix: "#3f9456", term: "#5fd97e", text: "" },
+};
+// dim explanation text is shared across schemes
+const DIM = "#7d8290";
+
+const PRESETS = {
+  "Classic":  { prefix: "[tutor]", scheme: "cyan",     sep: "—", layout: "indented" },
+  "Quiet":    { prefix: "none",    scheme: "dim gray", sep: "-", layout: "flat" },
+  "Friendly": { prefix: "📚",      scheme: "green",    sep: "→", layout: "indented" },
+  "Minimal":  { prefix: "›",       scheme: "yellow",   sep: ":", layout: "flat" },
+};
+
+const state = { prefix: "[tutor]", scheme: "cyan", sep: "—", layout: "indented" };
+
+function tutorLine(term, text, indent) {
+  const s = SCHEMES[state.scheme];
+  const pad = (state.layout === "indented" && indent) ? "  " : "";
+  const pfx = state.prefix === "none" ? "" :
+    `<span style="color:${s.prefix}">${esc(state.prefix)}</span> `;
+  return `${pfx}${pad}<span style="color:${s.term};font-weight:600">${esc(term)}</span> <span style="color:${DIM}">${esc(state.sep)} ${esc(text)}</span>`;
+}
+function esc(t) {
+  return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderPreview() {
+  const lines = [];
+  lines.push(`<span class="promptline"><span class="ps">arush@mac ~ %</span> <span class="cmd">git clone https://github.com/foo/bar</span></span>`);
+  lines.push(tutorLine("git", "version control tool: tracks changes to code and moves projects to and from the internet", false));
+  lines.push(tutorLine("clone", "download a full copy of a project from an online address", true));
+  lines.push(tutorLine("https://github.com/foo/bar", "the internet address of the project", true));
+  lines.push(`<span class="outline">Cloning into 'bar'...
+remote: Enumerating objects: 124, done.
+Receiving objects: 100% (124/124), done.</span>`);
+  lines.push("");
+  lines.push(`<span class="promptline"><span class="ps">arush@mac ~ %</span> <span class="cmd">ls -la</span></span>`);
+  lines.push(tutorLine("ls", "list the files and folders in the current folder", false));
+  lines.push(tutorLine("-l", "long view: one file per line with size, owner and date", true));
+  lines.push(tutorLine("-a", "also show hidden files (names starting with a dot)", true));
+  lines.push(`<span class="outline">drwxr-xr-x  14 arush  staff   448 11 Jun 10:22 .
+drwxr-xr-x   6 arush  staff   192 11 Jun 09:15 ..
+-rw-r--r--   1 arush  staff  1.2K 11 Jun 10:22 README.md
+drwxr-xr-x   8 arush  staff   256 11 Jun 10:22 bar</span>`);
+  document.getElementById("term").innerHTML = lines.join("\n");
+}
+
+function updatePrompt() {
+  document.getElementById("settings").textContent =
+    `prefix=${state.prefix} scheme=${state.scheme.replace(" ", "-")} sep=${state.sep} layout=${state.layout}`;
+}
+
+function renderControls() {
+  for (const key of Object.keys(OPTIONS)) {
+    const holder = document.getElementById(key);
+    holder.innerHTML = "";
+    for (const val of OPTIONS[key]) {
+      const b = document.createElement("button");
+      b.className = "opt" + (state[key] === val ? " sel" : "");
+      b.textContent = val;
+      b.onclick = () => { state[key] = val; updateAll(); };
+      holder.appendChild(b);
+    }
+  }
+  const ph = document.getElementById("presets");
+  ph.innerHTML = "";
+  for (const name of Object.keys(PRESETS)) {
+    const b = document.createElement("button");
+    const p = PRESETS[name];
+    const active = Object.keys(p).every(k => state[k] === p[k]);
+    b.className = "opt" + (active ? " sel" : "");
+    b.textContent = name;
+    b.onclick = () => { Object.assign(state, p); updateAll(); };
+    ph.appendChild(b);
+  }
+}
+
+function updateAll() {
+  renderControls();
+  renderPreview();
+  updatePrompt();
+}
+
+document.getElementById("copy").onclick = async () => {
+  const txt = document.getElementById("settings").textContent;
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  const btn = document.getElementById("copy");
+  const old = btn.textContent;
+  btn.textContent = "Copied!";
+  setTimeout(() => { btn.textContent = old; }, 1400);
+};
+
+updateAll();
+</script>
+</body>
+</html>
