@@ -175,6 +175,39 @@ assert_eq "seg-all: url arg" \
 "[t] foo - a test command for the suite
 [t]   https://github.com/foo/bar - an internet address" "$(out_join)"
 
+# --- tt_explain_segment (new mode) ---
+flush_seen() { (( ${#TT_NEWLY_SEEN} )) && print -rl -- "${TT_NEWLY_SEEN[@]}" >> "$TT_SEEN_FILE"; TT_NEWLY_SEEN=() }
+: > "$TT_SEEN_FILE"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-a" new
+assert_eq "seg-new: first use teaches both" "2" "${#TT_OUT}"
+flush_seen
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-a" new
+assert_eq "seg-new: second use silent" "0" "${#TT_OUT}"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-a${SEP}--all" new
+assert_eq "seg-new: only the new flag" "[t]   --all - every item" "$(out_join)"
+flush_seen
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "nosuchcmd" new
+assert_eq "seg-new: unknown once" "1" "${#TT_OUT}"
+flush_seen
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "nosuchcmd" new
+assert_eq "seg-new: unknown silent after" "0" "${#TT_OUT}"
+
+# repeat within one line must not double-print (in-memory dedupe)
+: > "$TT_SEEN_FILE"
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "foo${SEP}-a" new
+tt_explain_segment "foo${SEP}-a" new
+assert_eq "seg-new: same line dedupe" "2" "${#TT_OUT}"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"
