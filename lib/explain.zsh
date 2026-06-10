@@ -1,4 +1,5 @@
 # terminal-tutor explain engine: dictionary lookup, seen-state, line building.
+# Callers must declare: local -a TT_OUT TT_NEWLY_SEEN  (tt_line/tt_mark/tt_seen use them).
 
 # tt_dict_get <command> <type: summary|sub|flag|arg|op> [key]
 # Prints the explanation text from dictionary/<command>; returns 1 if absent.
@@ -17,6 +18,7 @@ tt_dict_get() {
         fi
         ;;
       *)
+        # non-summary lines need all three fields; incomplete lines are skipped
         if [[ "$f1" == "$type" && "$f2" == "$key" && -n "$rest" ]]; then
           print -r -- "$rest"
           return 0
