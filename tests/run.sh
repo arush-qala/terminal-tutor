@@ -314,6 +314,30 @@ print on > "$TT_STATE_FILE"
 
 unset TUTOR_HOME
 
+# --- install / uninstall ---
+IH="$TMP/inst_home"; mkdir -p "$IH"
+IZ="$IH/.zshrc"
+print "# my existing zshrc" > "$IZ"
+print "export FOO=bar" >> "$IZ"
+orig="$(<"$IZ")"
+
+TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/install.sh" --local >/dev/null
+assert_eq "install: exits 0" "0" "$?"
+grep -qF "# >>> terminal-tutor >>>" "$IZ"; assert_eq "install: block added" "0" "$?"
+[[ -L "$IH/.terminal-tutor/app" ]]; assert_eq "install: --local symlinks" "0" "$?"
+[[ -f "$IH/.terminal-tutor/seen" ]]; assert_eq "install: seen created" "0" "$?"
+
+TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/install.sh" --local >/dev/null
+assert_eq "install: idempotent block" "1" "$(grep -cF '# >>> terminal-tutor >>>' "$IZ")"
+
+TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/uninstall.sh" >/dev/null
+assert_eq "uninstall: exits 0" "0" "$?"
+assert_eq "uninstall: zshrc restored" "$orig" "$(<"$IZ")"
+[[ ! -e "$IH/.terminal-tutor" ]]; assert_eq "uninstall: state removed" "0" "$?"
+
+TUTOR_HOME="$IH" TUTOR_ZSHRC="$IZ" bash "$ROOT/uninstall.sh" >/dev/null
+assert_eq "uninstall: safe to run twice" "0" "$?"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"
