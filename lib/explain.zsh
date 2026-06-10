@@ -11,7 +11,7 @@ tt_dict_get() {
     case "$f1" in
       ''|\#*) continue ;;
       summary)
-        if [[ "$type" == summary ]]; then
+        if [[ "$type" == summary && -n "$f2" ]]; then
           print -r -- "$f2${rest:+ $rest}"
           return 0
         fi

@@ -108,6 +108,13 @@ assert_eq "dict: arg url" "an internet address" "$(tt_dict_get foo arg url)"
 tt_dict_get foo flag -z; assert_eq "dict: miss returns 1" "1" "$?"
 tt_dict_get nosuchcmd summary; assert_eq "dict: missing file returns 1" "1" "$?"
 
+cat > "$TT_DICT_DIR/badsum" <<'EOF'
+summary
+flag -a still works
+EOF
+tt_dict_get badsum summary; assert_eq "dict: bare summary skipped" "1" "$?"
+assert_eq "dict: file still usable" "still works" "$(tt_dict_get badsum flag -a)"
+
 # --- tt_line / tt_seen / tt_mark / tt_explain_op ---
 cat > "$TT_DICT_DIR/_operators" <<'EOF'
 op | pipe: sends the output of the left command into the right command
