@@ -14,7 +14,7 @@ A zsh plugin for macOS Terminal that teaches Arush what his commands mean as he 
 |----------|--------|
 | When explanations appear | First time a command/flag is used, plus an on-demand `explain` command |
 | Explanation source | Offline only — curated local dictionary. No AI calls, no internet needed |
-| Portability | Project in `~/Projects/terminal-tutor`, pushed to a free GitHub repo; one-line curl install on any Mac |
+| Portability | Project in `2026/Projects/terminal-tutor` (OneDrive, syncs across machines), pushed to a free GitHub repo; one-line curl install on any Mac |
 | Shell support | zsh only (macOS default). No bash support |
 | Visual style of output | To be chosen by Arush via an interactive HTML playground (browser) during implementation — colors, prefix symbol, layout presented as clickable live previews |
 
@@ -45,7 +45,7 @@ A zsh plugin for macOS Terminal that teaches Arush what his commands mean as he 
 ## Architecture
 
 ```
-~/Projects/terminal-tutor/        (development copy; pushed to GitHub)
+2026/Projects/terminal-tutor/     (development copy in OneDrive; pushed to GitHub)
 ├── terminal-tutor.zsh            # main plugin: preexec hook, explain, tutor commands
 ├── dictionary/                   # one plain-text file per command
 │   ├── git
@@ -96,7 +96,7 @@ A zsh plugin for macOS Terminal that teaches Arush what his commands mean as he 
    # <<< terminal-tutor <<<
    ```
 
-   Install one-liner: `curl -fsSL https://raw.githubusercontent.com/<user>/terminal-tutor/main/install.sh | bash`. On the dev machine, `install.sh --local` symlinks to `~/Projects/terminal-tutor` instead of cloning, so edits take effect immediately.
+   Install one-liner: `curl -fsSL https://raw.githubusercontent.com/<user>/terminal-tutor/main/install.sh | bash`. On the dev machine, `install.sh --local` symlinks to the project folder itself instead of cloning, so edits take effect immediately.
 
 8. **Uninstaller (`uninstall.sh` / `tutor uninstall`)** — removes the marked block from `~/.zshrc` (only the marked block, nothing else) and deletes `~/.terminal-tutor/`. Prints confirmation and tells the user to open a new Terminal window.
 
