@@ -32,6 +32,8 @@ source "$ROOT/lib/parser.zsh"
 source "$ROOT/lib/explain.zsh"
 
 # --- tt_split ---
+# seg_join: renders TT_SEGMENTS for assertions; ' ;; ' is just the display join separator
+# (segments internally use \x1f as the word separator within each segment).
 seg_join() { print -r -- "${(j: ;; :)${(@)TT_SEGMENTS//$'\x1f'/ }}" }
 
 tt_split "ls -la"
@@ -51,6 +53,14 @@ assert_eq "split: op deduped" "|" "${(j: :)TT_OPS}"
 
 tt_split 'grep "hello world" f.txt'
 assert_eq "split: quoted arg intact" 'grep "hello world" f.txt' "$(seg_join)"
+
+tt_split "ls foo 2>&1"
+assert_eq "split: fd redirect combined" "ls foo" "$(seg_join)"
+assert_eq "split: fd redirect op" "2>&1" "${(j: :)TT_OPS}"
+
+tt_split "cat << EOF"
+assert_eq "split: heredoc marker consumed" "cat" "$(seg_join)"
+assert_eq "split: heredoc op" "<<" "${(j: :)TT_OPS}"
 
 # --- tt_tokenize ---
 tok_join() { print -r -- "${(j: :)TT_TOKENS}" }
@@ -73,6 +83,12 @@ assert_eq "tok: quoted word untouched" 'cmd:grep word:"hello world" word:f.txt' 
 
 tt_tokenize "kill${SEP}-9${SEP}1234"
 assert_eq "tok: numeric flag" "cmd:kill flag:-9 word:1234" "$(tok_join)"
+
+tt_tokenize "env${SEP}FOO=bar${SEP}python"
+assert_eq "tok: env assignment" "cmd:env word:FOO=bar cmd:python" "$(tok_join)"
+
+tt_tokenize "grep${SEP}--${SEP}-v"
+assert_eq "tok: dashes end flags" "cmd:grep arg:-- word:-v" "$(tok_join)"
 
 # === SUMMARY ===
 print ""

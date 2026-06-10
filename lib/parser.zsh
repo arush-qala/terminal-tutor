@@ -8,10 +8,12 @@
 tt_split() {
   emulate -L zsh
   local -a words cur
-  local w skip_next=0
+  local w nxt skip_next=0
   TT_SEGMENTS=() TT_OPS=()
   words=(${(z)1})
-  for w in "${words[@]}"; do
+  local idx
+  for (( idx=1; idx <= ${#words}; idx++ )); do
+    w="${words[idx]}"
     if (( skip_next )); then skip_next=0; continue; fi
     case "$w" in
       '|'|'||'|'&&'|';'|'&'|'|&')
@@ -23,8 +25,21 @@ tt_split() {
         (( ${TT_OPS[(Ie)$w]} )) || TT_OPS+=("$w")
         skip_next=1
         ;;
-      [0-9]'>&'[0-9])
+      '>&'|[0-9]'>&')
+        # zsh lexes "2>&1" as two tokens: "2>&" and "1"
+        nxt="${words[idx+1]:-}"
+        if [[ "$nxt" == [0-9] ]]; then
+          local combined="${w}${nxt}"
+          (( ${TT_OPS[(Ie)$combined]} )) || TT_OPS+=("$combined")
+          (( idx++ ))   # consume the digit
+        else
+          (( ${TT_OPS[(Ie)$w]} )) || TT_OPS+=("$w")
+          skip_next=1   # csh-style ">& file" — consume the filename
+        fi
+        ;;
+      '<<'|'<<-'|'<<<')
         (( ${TT_OPS[(Ie)$w]} )) || TT_OPS+=("$w")
+        skip_next=1   # consume the heredoc marker / herestring word
         ;;
       *) cur+=("$w") ;;
     esac
@@ -40,15 +55,24 @@ tt_tokenize() {
   local -a words
   words=("${(ps:\x1f:)1}")
   TT_TOKENS=()
-  local w i expecting_cmd=1
+  local w i expecting_cmd=1 after_dashdash=0
   for w in "${words[@]}"; do
     if (( expecting_cmd )) && [[ "$w" != -* ]]; then
-      TT_TOKENS+=("cmd:$w")
-      [[ "$w" == sudo || "$w" == env ]] || expecting_cmd=0
+      if [[ "$w" == *=* ]]; then
+        TT_TOKENS+=("word:$w")   # env-var assignment, not a command
+      else
+        TT_TOKENS+=("cmd:$w")
+        [[ "$w" == sudo || "$w" == env ]] || expecting_cmd=0
+      fi
+      continue
+    fi
+    # After --, nothing is classified as a flag
+    if (( after_dashdash )); then
+      TT_TOKENS+=("word:$w")
       continue
     fi
     case "$w" in
-      --) TT_TOKENS+=("arg:--") ;;
+      --) TT_TOKENS+=("arg:--"); after_dashdash=1 ;;
       --*) TT_TOKENS+=("flag:${w%%=*}") ;;
       -[A-Za-z0-9]) TT_TOKENS+=("flag:$w") ;;
       -[A-Za-z][A-Za-z]*)
