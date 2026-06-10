@@ -1,0 +1,4 @@
+summary sort lines of text alphabetically (or numerically)
+flag -r reverse the sort order (Z to A, or largest number first)
+flag -n sort numerically instead of alphabetically
+flag -u unique: remove duplicate lines from the output

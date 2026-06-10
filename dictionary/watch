@@ -1,0 +1,2 @@
+summary run a command repeatedly and show updated output (install with: brew install watch)
+flag -n how many seconds to wait between runs (default is 2)

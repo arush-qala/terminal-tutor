@@ -1,0 +1,2 @@
+summary parse and query JSON data from the terminal (install with: brew install jq)
+flag -r raw output: print strings without surrounding quote marks

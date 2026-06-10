@@ -1,0 +1,1 @@
+summary Mac: copy text into the clipboard (pipe something into it, e.g. cat file.txt | pbcopy)

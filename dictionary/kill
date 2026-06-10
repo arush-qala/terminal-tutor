@@ -1,0 +1,3 @@
+summary stop a running program by its process ID number
+flag -9 force-kill immediately (the program has no chance to clean up)
+flag -l list all available signal names

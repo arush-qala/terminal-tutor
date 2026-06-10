@@ -1,0 +1,6 @@
+summary install and manage Python packages (same as pip but explicitly for Python 3)
+sub install download and install a package
+sub uninstall remove a package
+sub list show all installed packages
+sub show show details about one specific package
+flag -U upgrade a package to the latest version

@@ -1,0 +1,2 @@
+summary process text line by line, great for extracting specific columns from output
+flag -F set the character used to split each line into columns (e.g. -F: for colon)

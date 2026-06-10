@@ -1,0 +1,5 @@
+summary fast Python package and project manager (much quicker than pip for installs)
+sub pip install packages, similar to pip but faster
+sub venv create an isolated Python environment for a project
+sub run run a Python script with its dependencies, without manually activating anything
+sub tool install or run a Python command-line tool

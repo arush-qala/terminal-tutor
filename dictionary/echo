@@ -1,0 +1,2 @@
+summary print text or a variable's value to the screen
+flag -n print without adding a newline at the end

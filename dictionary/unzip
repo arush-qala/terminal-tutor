@@ -1,0 +1,2 @@
+summary extract files from a .zip archive
+flag -d extract into the folder you name, instead of the current folder

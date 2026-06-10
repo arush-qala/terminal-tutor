@@ -1,0 +1,9 @@
+summary run apps inside lightweight isolated boxes (containers) that work anywhere
+sub run start a container from an image
+sub ps list running containers
+sub pull download an image from Docker Hub
+sub build build a new image from a Dockerfile
+sub images list images you have downloaded
+sub stop stop a running container
+flag -i interactive: keep stdin open so you can type into the container
+flag -t allocate a terminal inside the container (usually combined with -i as -it)

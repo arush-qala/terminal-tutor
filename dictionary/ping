@@ -1,0 +1,2 @@
+summary check if a server or website is reachable and measure response time
+flag -c send only this many pings then stop (otherwise press Ctrl+C to stop)

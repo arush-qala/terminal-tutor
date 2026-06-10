@@ -1,0 +1,3 @@
+summary JavaScript package manager, an alternative to npm
+sub install download all packages listed in the project's package.json
+sub add download and add a new package to the project

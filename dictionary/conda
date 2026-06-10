@@ -1,0 +1,6 @@
+summary manage Python environments and packages, popular in data science
+sub activate switch into a named environment so you use its Python and packages
+sub deactivate leave the current environment and return to the default
+sub install add a package to the current environment
+sub create make a new isolated environment
+sub env list or manage environments

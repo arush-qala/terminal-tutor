@@ -1,0 +1,3 @@
+summary download a file from the internet (install with: brew install wget)
+flag -O save the download to the file name you specify
+arg url the internet address to download from

@@ -1,0 +1,2 @@
+summary print information about your Mac's operating system
+flag -a print everything: OS name, version, machine type and more

@@ -1,0 +1,6 @@
+summary search for a word or pattern inside files and print the matching lines
+flag -i ignore upper/lowercase differences when matching
+flag -r search inside every file in a folder and its subfolders
+flag -n show the line number beside each match
+flag -v invert: show lines that do NOT match
+flag -E allow extended patterns like (cat|dog) to match either word

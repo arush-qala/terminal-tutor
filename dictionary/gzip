@@ -1,0 +1,2 @@
+summary compress a file into a .gz archive, or decompress one
+flag -d decompress a .gz file (same as running gunzip)

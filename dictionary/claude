@@ -1,0 +1,3 @@
+summary Anthropic's AI coding agent in the terminal: reads your code and makes changes
+flag -p run a single prompt without opening an interactive session
+flag --version print which version of Claude Code is installed

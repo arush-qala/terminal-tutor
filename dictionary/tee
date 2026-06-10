@@ -1,0 +1,2 @@
+summary copy input to a file and also pass it on to the next command (splits the pipe)
+flag -a append to the file instead of replacing it

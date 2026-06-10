@@ -1,0 +1,3 @@
+summary show the last 10 lines of a file
+flag -n show this many lines instead of the default 10
+flag -f keep watching the file and print new lines as they are added (great for logs)

@@ -1,0 +1,2 @@
+summary show how much space is used and free on each disk
+flag -h show sizes in human-readable units like GB instead of raw block counts

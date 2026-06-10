@@ -1,0 +1,2 @@
+summary print a file's contents to the screen
+flag -n show line numbers beside each line

@@ -1,0 +1,4 @@
+summary list currently running programs (processes) on your Mac
+flag -e list every process on the system, not just yours
+flag -f full detail: show the command, user, start time and parent process
+sub aux show every running process with CPU and memory usage (very common combo)

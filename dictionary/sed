@@ -1,0 +1,4 @@
+summary find and replace text in a file or stream using a pattern
+flag -i edit the file in place (modifies the actual file, not just the screen output)
+flag -e supply the find-and-replace expression directly on the command line
+flag -n suppress default output (only print lines you explicitly request)

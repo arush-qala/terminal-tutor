@@ -1,0 +1,3 @@
+summary take a list of items from input and run a command on each one
+flag -I replace a placeholder (e.g. {}) in the command with each item from input
+flag -n how many items to pass to each run of the command

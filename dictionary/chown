@@ -1,0 +1,2 @@
+summary change which user (and group) owns a file or folder
+flag -R apply the change to a folder and everything inside it

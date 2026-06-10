@@ -1,0 +1,2 @@
+summary show the first 10 lines of a file (useful for peeking at large files)
+flag -n show this many lines instead of the default 10

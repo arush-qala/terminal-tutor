@@ -1,0 +1,2 @@
+summary remove consecutive duplicate lines (pipe from sort first to catch all duplicates)
+flag -c prefix each line with how many times it appeared

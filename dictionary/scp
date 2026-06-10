@@ -1,0 +1,2 @@
+summary securely copy files to or from a remote computer (uses ssh for encryption)
+flag -r copy a whole folder and everything inside it

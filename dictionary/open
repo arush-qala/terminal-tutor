@@ -1,0 +1,3 @@
+summary Mac: open a file, folder or web address with its default app, just like double-clicking
+flag -a open with a specific app by name instead of the default
+flag -e open the file in TextEdit for plain-text editing

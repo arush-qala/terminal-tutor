@@ -1,0 +1,3 @@
+summary show how much disk space a file or folder is using
+flag -h show sizes in human-readable units like MB and GB
+flag -s show a single total for the whole folder instead of listing each item

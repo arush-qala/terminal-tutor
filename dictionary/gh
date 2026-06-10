@@ -1,0 +1,6 @@
+summary GitHub's official command-line tool: manage repos, pull requests and issues
+sub auth log in to (or out of) your GitHub account
+sub repo create, clone or view GitHub repositories
+sub pr create, review or merge pull requests
+sub issue create or view GitHub issues
+flag --help show help for the command or subcommand

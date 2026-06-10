@@ -1,0 +1,5 @@
+summary run AI language models locally on your own Mac, with no internet required
+sub run chat with a model (downloads it first if you don't have it)
+sub pull download a model from the Ollama library
+sub list show all models you have downloaded
+sub serve start the Ollama background service that other apps can connect to

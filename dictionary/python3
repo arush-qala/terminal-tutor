@@ -1,0 +1,3 @@
+summary run a Python script or start an interactive Python session (explicitly Python 3)
+flag -m run a Python module as a script (e.g. python3 -m http.server starts a web server)
+flag -V print which version of Python is installed

@@ -1,0 +1,2 @@
+summary run a JavaScript tool without installing it first (downloads and runs in one step)
+flag -y skip any confirmation prompts (say yes to everything automatically)

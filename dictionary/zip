@@ -1,0 +1,2 @@
+summary create a .zip archive from files or folders
+flag -r include a folder and everything inside it

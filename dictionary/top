@@ -1,0 +1,2 @@
+summary live view of running processes sorted by resource use (press q to quit)
+flag -o sort by a column, e.g. -o cpu to sort by CPU usage

@@ -1,0 +1,4 @@
+summary install Python command-line tools in their own isolated spaces so they don't conflict
+sub install install a Python tool as a standalone command
+sub run run a Python tool once without installing it permanently
+sub list show all tools installed with pipx

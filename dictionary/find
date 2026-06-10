@@ -1,0 +1,4 @@
+summary search for files and folders by name, type or other criteria
+flag -name match files whose name fits the pattern you give (e.g. "*.txt")
+flag -type filter by kind: f for files, d for folders
+flag -delete delete every file the search finds (use carefully)

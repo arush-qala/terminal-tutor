@@ -1,0 +1,2 @@
+summary show a folder's contents as an indented tree (install with: brew install tree)
+flag -L how many levels deep to go (e.g. -L 2 shows two levels)

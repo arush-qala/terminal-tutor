@@ -1,0 +1,6 @@
+summary pack or unpack archive files (the classic combo -xzvf extracts a .tar.gz file)
+flag -x extract files from an archive
+flag -c create a new archive
+flag -z compress or decompress using gzip (for .tar.gz files)
+flag -v verbose: list each file as it is packed or unpacked
+flag -f the archive file to read from or write to (must come right before the filename)

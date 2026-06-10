@@ -1,0 +1,3 @@
+summary securely log in to a remote computer over the internet
+flag -i use a specific key file (identity file) instead of your default key
+flag -p connect on a specific port number instead of the default 22

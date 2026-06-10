@@ -1,0 +1,4 @@
+summary copy a file or folder from one place to another
+flag -r copy a folder and everything inside it
+flag -i ask before overwriting a file that already exists
+flag -v show each file as it is copied

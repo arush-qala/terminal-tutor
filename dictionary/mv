@@ -1,0 +1,3 @@
+summary move or rename a file or folder
+flag -i ask before overwriting a file that already exists
+flag -v show each file as it is moved

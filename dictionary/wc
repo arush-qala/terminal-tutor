@@ -1,0 +1,4 @@
+summary count lines, words and characters in a file
+flag -l count lines only
+flag -w count words only
+flag -c count bytes (characters) only
