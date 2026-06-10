@@ -1,0 +1,4 @@
+summary delete files - careful: there is no trash bin here, gone is gone
+flag -r also delete folders and everything inside them
+flag -f force: do not ask for confirmation
+flag -i ask before each delete (safer)

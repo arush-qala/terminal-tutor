@@ -1,0 +1,6 @@
+summary controls terminal-tutor itself (on, off, reset, status, uninstall)
+sub on resume automatic teaching
+sub off pause automatic teaching
+sub reset forget everything learned so it teaches from scratch
+sub status show whether teaching is on and how much you have learned
+sub uninstall remove terminal-tutor completely

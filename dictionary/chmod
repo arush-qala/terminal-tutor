@@ -1,0 +1,3 @@
+summary change a file's permissions (who may read, write or run it)
+flag -R apply to a folder and everything inside it
+sub +x make the file executable, i.e. runnable as a program (common after downloading scripts)

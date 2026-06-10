@@ -1,0 +1,8 @@
+summary the package manager for JavaScript tools; installs them into a project or your whole machine
+sub install download a package (add -g to install it machine-wide as a command)
+sub uninstall remove a package
+sub run run a script defined by the project
+sub start start the project (shorthand for npm run start)
+sub init set up a new project in this folder
+flag -g global: install machine-wide so you can use it anywhere
+flag --version print which version of npm is installed

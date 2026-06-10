@@ -1,0 +1,2 @@
+summary run one command as the administrator; the Mac asks for your password first
+flag -E keep your settings while running as administrator

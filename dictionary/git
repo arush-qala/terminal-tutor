@@ -1,0 +1,17 @@
+summary version control tool: tracks changes to code and moves projects to and from the internet
+sub clone download a full copy of a project from an online address
+sub status show what has changed since your last save point
+sub add stage files so the next commit includes them
+sub commit save a named snapshot of your staged changes
+sub push upload your saved commits to the online copy (e.g. GitHub)
+sub pull download the latest changes from the online copy
+sub log list past commits, newest first
+sub init turn the current folder into a git project
+sub branch list or create parallel working versions of the project
+sub checkout switch to another branch or version
+sub diff show exactly which lines changed
+flag -m the message describing a commit
+flag -C run as if started inside the given folder
+flag --version print which version of git is installed
+flag --help show the help page
+arg url the internet address of the project

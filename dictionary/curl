@@ -1,0 +1,11 @@
+summary download from, or talk to, an internet address right from the terminal
+flag -f fail silently instead of saving an error page
+flag -s silent: hide the progress bar
+flag -S but still show real errors (used together with -s)
+flag -L follow redirects if the address has moved
+flag -o save the download into the file you name
+flag -O save the download using its original file name
+flag -X choose the request type (GET fetches, POST sends)
+flag -H add an extra header line to the request
+flag -d the data to send with the request
+arg url the internet address to fetch

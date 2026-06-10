@@ -1,0 +1,10 @@
+summary Homebrew: the app store of the Mac terminal; installs command-line programs
+sub install download and set up a program
+sub uninstall remove a program that brew installed
+sub update refresh brew's catalogue of available programs
+sub upgrade install newer versions of programs you already have
+sub list show everything brew has installed
+sub search look for a program by name
+sub info show details about a program before installing
+sub doctor check your brew setup for problems
+flag --cask install a regular Mac app (with a windowed interface) rather than a terminal tool
