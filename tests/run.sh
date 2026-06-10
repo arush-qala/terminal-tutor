@@ -108,6 +108,39 @@ assert_eq "dict: arg url" "an internet address" "$(tt_dict_get foo arg url)"
 tt_dict_get foo flag -z; assert_eq "dict: miss returns 1" "1" "$?"
 tt_dict_get nosuchcmd summary; assert_eq "dict: missing file returns 1" "1" "$?"
 
+# --- tt_line / tt_seen / tt_mark / tt_explain_op ---
+cat > "$TT_DICT_DIR/_operators" <<'EOF'
+op | pipe: sends the output of the left command into the right command
+op && and: run the right command only if the left one succeeded
+EOF
+
+typeset -a TT_OUT TT_NEWLY_SEEN
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_line 0 "foo" "a test command"
+tt_line 1 "-a" "option a"
+assert_eq "line: top level" "[t] foo - a test command" "${TT_OUT[1]}"
+assert_eq "line: indented" "[t]   -a - option a" "${TT_OUT[2]}"
+
+tt_seen "zzz"; assert_eq "seen: unknown is unseen" "1" "$?"
+tt_mark "zzz"
+tt_seen "zzz"; assert_eq "seen: marked in memory" "0" "$?"
+print "yyy" >> "$TT_SEEN_FILE"
+tt_seen "yyy"; assert_eq "seen: found in file" "0" "$?"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_op "|" new
+assert_eq "op: explained" "[t] | - pipe: sends the output of the left command into the right command" "${TT_OUT[1]}"
+assert_eq "op: marked" "op:|" "${TT_NEWLY_SEEN[1]}"
+TT_OUT=()
+tt_explain_op "|" new
+assert_eq "op: silent second time" "0" "${#TT_OUT}"
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_op "|" all
+assert_eq "op: all mode ignores seen" "1" "${#TT_OUT}"
+TT_OUT=()
+tt_explain_op ">" new
+assert_eq "op: unknown op silent" "0" "${#TT_OUT}"
+
 # === SUMMARY ===
 print ""
 print "tests: $((pass+fail))  passed: $pass  failed: $fail"

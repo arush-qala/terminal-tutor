@@ -26,3 +26,30 @@ tt_dict_get() {
   done < "$file"
   return 1
 }
+
+# tt_line <indent 0|1> <term> <text>  - appends one styled line to TT_OUT
+tt_line() {
+  local pad=""
+  (( $1 )) && pad="  "
+  TT_OUT+=("${TT_C_PREFIX}${TT_PREFIX}${TT_C_RESET} ${pad}${TT_C_TERM}${2}${TT_C_RESET} ${TT_C_TEXT}${TT_SEP} ${3}${TT_C_RESET}")
+}
+
+# tt_seen <key> - 0 if already taught (this command line or the seen file)
+tt_seen() {
+  (( ${TT_NEWLY_SEEN[(Ie)$1]} )) && return 0
+  grep -qxF -- "$1" "$TT_SEEN_FILE" 2>/dev/null
+}
+
+# tt_mark <key> - remember a key as taught (written to file by the caller)
+tt_mark() { TT_NEWLY_SEEN+=("$1") }
+
+# tt_explain_op <operator> <mode: new|all>
+tt_explain_op() {
+  emulate -L zsh
+  local op="$1" mode="$2" text
+  [[ "$mode" == new ]] && tt_seen "op:$op" && return 0
+  text="$(tt_dict_get _operators op "$op")" || return 0
+  tt_line 0 "$op" "$text"
+  [[ "$mode" == new ]] && tt_mark "op:$op"
+  return 0
+}

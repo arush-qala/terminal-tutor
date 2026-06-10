@@ -1,0 +1,12 @@
+# shell operators (looked up by tt_explain_op)
+op | pipe: sends the output of the left command into the right command as its input
+op && and-then: run the right command only if the left one finished without error
+op || or-else: run the right command only if the left one failed
+op ; then: run the commands one after another, regardless of errors
+op & background: run the command in the background so you can keep typing
+op > save-to-file: write the command's output into a file (replacing it)
+op >> append-to-file: add the command's output to the end of a file
+op < read-from-file: feed a file into the command as its input
+op |& pipe-all: like | but also sends error messages across
+op 2> errors-to-file: write only the error messages into a file
+op 2>&1 merge: send error messages to the same place as normal output
