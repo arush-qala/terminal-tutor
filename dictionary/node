@@ -1,3 +1,3 @@
 summary run JavaScript code directly in the terminal without a browser
-sub --version print which version of Node.js is installed
-sub -e run a short JavaScript snippet you type directly on the command line
+flag --version print which version of Node.js is installed
+flag -e run a short JavaScript snippet you type directly on the command line
