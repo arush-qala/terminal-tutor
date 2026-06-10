@@ -70,13 +70,13 @@ tt_tokenize "git${SEP}clone${SEP}https://github.com/foo/bar"
 assert_eq "tok: cmd word word" "cmd:git word:clone word:https://github.com/foo/bar" "$(tok_join)"
 
 tt_tokenize "ls${SEP}-la"
-assert_eq "tok: bundle expands" "cmd:ls flag:-l flag:-a" "$(tok_join)"
+assert_eq "tok: bundle expands" "cmd:ls flag:-la" "$(tok_join)"
 
 tt_tokenize "git${SEP}clone${SEP}--depth=1"
 assert_eq "tok: long flag value stripped" "cmd:git word:clone flag:--depth" "$(tok_join)"
 
 tt_tokenize "sudo${SEP}rm${SEP}-rf${SEP}/tmp/x"
-assert_eq "tok: sudo prefix" "cmd:sudo cmd:rm flag:-r flag:-f word:/tmp/x" "$(tok_join)"
+assert_eq "tok: sudo prefix" "cmd:sudo cmd:rm flag:-rf word:/tmp/x" "$(tok_join)"
 
 tt_tokenize "grep${SEP}\"hello world\"${SEP}f.txt"
 assert_eq "tok: quoted word untouched" 'cmd:grep word:"hello world" word:f.txt' "$(tok_join)"
@@ -222,6 +222,38 @@ flush_seen
 TT_OUT=() TT_NEWLY_SEEN=()
 tt_explain_segment "foo${SEP}run" new
 assert_eq "seg-new: seen sub silent" "0" "${#TT_OUT}"
+
+# --- long single-dash flags vs bundles ---
+cat > "$TT_DICT_DIR/fnd" <<'EOF'
+summary searches for files
+flag -name match files by name pattern
+EOF
+cat > "$TT_DICT_DIR/lss" <<'EOF'
+summary lists files
+flag -l long view
+flag -a hidden files too
+EOF
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "fnd${SEP}-name" all
+assert_eq "flags: whole flag wins" \
+"[t] fnd - searches for files
+[t]   -name - match files by name pattern" "$(out_join)"
+
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "lss${SEP}-la" all
+assert_eq "flags: bundle explodes on miss" \
+"[t] lss - lists files
+[t]   -l - long view
+[t]   -a - hidden files too" "$(out_join)"
+
+: > "$TT_SEEN_FILE"
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "lss${SEP}-la" new
+flush_seen
+TT_OUT=() TT_NEWLY_SEEN=()
+tt_explain_segment "lss${SEP}-l" new
+assert_eq "flags: exploded chars marked individually" "0" "${#TT_OUT}"
 
 # --- plugin wiring (hook, explain, tutor) ---
 # Load the full plugin in a sandboxed HOME, with the REAL dictionary.

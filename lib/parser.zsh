@@ -74,9 +74,6 @@ tt_tokenize() {
     case "$w" in
       --) TT_TOKENS+=("arg:--"); after_dashdash=1 ;;
       --*) TT_TOKENS+=("flag:${w%%=*}") ;;
-      -[A-Za-z0-9]) TT_TOKENS+=("flag:$w") ;;
-      -[A-Za-z][A-Za-z]*)
-        for (( i=2; i <= ${#w}; i++ )); do TT_TOKENS+=("flag:-${w[i]}"); done ;;
       -*) TT_TOKENS+=("flag:$w") ;;
       *) TT_TOKENS+=("word:$w") ;;
     esac

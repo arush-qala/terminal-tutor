@@ -1,5 +1,5 @@
 summary download from, or talk to, an internet address right from the terminal
-flag -f fail silently instead of saving an error page
+flag -f treat server errors (like 404) as failures instead of saving the error page
 flag -s silent: hide the progress bar
 flag -S but still show real errors (used together with -s)
 flag -L follow redirects if the address has moved

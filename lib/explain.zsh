@@ -92,13 +92,37 @@ tt_explain_segment() {
         ;;
       flag)
         [[ -z "$cmd" ]] && continue
+        # Try the full flag first (handles --long and single-dash long like -name)
         if [[ "$mode" == all ]] || ! tt_seen "$cmd $val"; then
           if text="$(tt_dict_get "$cmd" flag "$val")"; then
             tt_line 1 "$val" "$text"
             [[ "$mode" == new ]] && tt_mark "$cmd $val"
-          elif [[ "$mode" == all ]]; then
+            continue
+          fi
+        fi
+        # Full-flag lookup missed; for multi-char single-dash bundles (e.g. -la, -rf),
+        # explode into per-char flags and process each individually.
+        # --long flags and single-char flags are never exploded.
+        if [[ "$val" == --* || ${#val} -le 2 ]]; then
+          # --long or single-char: emit "(no entry)" in all mode
+          if [[ "$mode" == all ]] && { [[ "$mode" == all ]] || ! tt_seen "$cmd $val" }; then
             tt_line 1 "$val" "(no entry for this option)"
           fi
+        else
+          # multi-char single-dash bundle: explode
+          local i ch cflag
+          for (( i=2; i <= ${#val}; i++ )); do
+            ch="${val[i]}"
+            cflag="-${ch}"
+            if [[ "$mode" == all ]] || ! tt_seen "$cmd $cflag"; then
+              if text="$(tt_dict_get "$cmd" flag "$cflag")"; then
+                tt_line 1 "$cflag" "$text"
+                [[ "$mode" == new ]] && tt_mark "$cmd $cflag"
+              elif [[ "$mode" == all ]]; then
+                tt_line 1 "$cflag" "(no entry for this option)"
+              fi
+            fi
+          done
         fi
         ;;
       word)
