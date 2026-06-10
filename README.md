@@ -28,7 +28,7 @@ Then open a new Terminal window. That's it.
 
 What it does: downloads the plugin to `~/.terminal-tutor/app` and adds a clearly-marked block to `~/.zshrc`. Nothing else is touched. If you ever want to see exactly what it added, open `~/.zshrc` and look for the lines between `# >>> terminal-tutor >>>` and `# <<< terminal-tutor <<<`.
 
-You need git installed. git comes with the macOS developer tools — if you don't have it yet, the Mac will offer to install the tools automatically the first time something needs them.
+You need git installed. git comes with the macOS developer tools; if you don't have it yet, the Mac will offer to install the tools automatically the first time something needs them.
 
 ---
 
@@ -52,7 +52,7 @@ This removes the marked block from `~/.zshrc` and deletes the `~/.terminal-tutor
 
 | What you want | How |
 |---|---|
-| Automatic first-time teaching | Nothing — it happens on its own |
+| Automatic first-time teaching | Nothing, it happens on its own |
 | Explain any command on demand | `explain ls -la` |
 | Explain a command that has `\|` in it | `explain 'cat log \| grep error'` (put quotes around it) |
 | Pause teaching | `tutor off` |
@@ -73,11 +73,11 @@ flag -p watch one specific process, by its process ID number
 ```
 
 The format:
-- `summary` — one line describing what the command does overall
-- `flag` — one line per flag or option, in the format `flag <flag-name> <plain-English description>`
-- `sub` — same format as `flag`, but for subcommands (like `git clone` or `brew install`)
+- `summary`: one line describing what the command does overall
+- `flag`: one line per flag or option, in the format `flag <flag-name> <plain-English description>`
+- `sub`: same format as `flag`, but for subcommands (like `git clone` or `brew install`)
 - Fields are whitespace-separated; everything after the flag/subcommand name is the description
-- Plain English only — write it as if explaining to someone who has never used a terminal
+- Plain English only: write it as if explaining to someone who has never used a terminal
 
 New files take effect the next time you open a Terminal window. You do not need to run `tutor reset`.
 
@@ -85,19 +85,19 @@ New files take effect the next time you open a Terminal window. You do not need 
 
 ## Alternatives and further learning
 
-**tldr pages** — community-written summaries for hundreds of commands. Install with `brew install tlrc`, then type `tldr tar` to see a focused cheat sheet with real examples.
+**tldr pages**: community-written summaries for hundreds of commands. Install with `brew install tlrc`, then type `tldr tar` to see a focused cheat sheet with real examples.
 
-**explainshell.com** — paste any command into the browser and it highlights each part with its manual-page description. Good when you have a long command you want to dissect.
+**explainshell.com**: paste any command into the browser and it highlights each part with its manual-page description. Good when you have a long command you want to dissect.
 
-**Warp terminal** — a replacement for the default Terminal app that has AI built in. You can describe what you want to do and it suggests the command.
+**Warp terminal**: a replacement for the default Terminal app that has AI built in. You can describe what you want to do and it suggests the command.
 
-**An AI agent** — ask Claude Code (or any other AI assistant) to explain anything. Something like "what does `find . -name '*.log' -mtime +7 -delete` do?" works well.
+**An AI agent**: ask Claude Code (or any other AI assistant) to explain anything. Something like "what does `find . -name '*.log' -mtime +7 -delete` do?" works well.
 
 ---
 
 ## For developers
 
-**Developer install** — symlinks the repo into place so edits apply immediately without reinstalling:
+**Developer install**, which symlinks the repo into place so edits apply immediately without reinstalling:
 
 ```bash
 ./install.sh --local
